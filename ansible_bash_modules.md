@@ -1,12 +1,21 @@
-# Introduction
+# Writing Ansible Modules in Bash
+
+
+## License
+
+This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
+
+http://creativecommons.org/licenses/by-nc/4.0/
+
+## Introduction
 One of the strengths of Ansible is that you can write modules for it in any language. Whilst there are advantages to writing modules in Python, such as a bunch of helper routines, the only thing you miss out on by using another language is the ability for your module to support dry run mode.  
 
 In this guide I'm going to look at writing modules in bash, although the same principles can be used in any scripting language. 
 
-## Why Bash?
+### Why Bash?
 Although bash lacks a lot of features compared to languages such as Python, Ruby or Perl, a large number of people have some experience with it. Turning a bash script into an Ansible module doesn't take much additional knowledge. 
 
-##  Input
+###  Input
 Ansible will run your module and pass it one argument: the name of a file containing the module arguments you specified in your playbook. For example, if you had 
 
 ```
@@ -27,7 +36,7 @@ source $1
 
 This will create the variables `$dest` and `$state`.
 
-## Output
+### Output
 
 The output from your module must be in JSON format. If you return any other output, Ansible will treat it as a failure. This means you need to capture stdout and stderr from any commands you run. 
 
@@ -73,7 +82,7 @@ This might be a good thing to put in a function so you can easily use it in mult
 printf '{"changed": true, "msg": %s}' "$msg"
 ```
 
-##  Example module
+###  Example module
 
 This is a simple example module which writes some text to a file and can convert it to upper or lower case. 
 
@@ -191,8 +200,8 @@ This is a simple example module which writes some text to a file and can convert
 111 exit 0
 ```
 
-##  Testing Your Module
-### Testing Using `test-module`
+###  Testing Your Module
+#### Testing Using `test-module`
 If you've installed Ansible from the GitHub repository, you'll have a directory called "hacking". In there is a program called `test-module`. 
 
 `test-module` will properly handle your module outputting lines other than JSON and will display them in the `RAW OUTPUT` section. Your JSON output will be displayed under `PARSED OUTPUT`.
@@ -208,7 +217,7 @@ Setting up your environment to use it:
     export PATH=$PATH:`pwd` 
     ```
 
-### Example Run: create the file
+#### Example Run: create the file
 
 This example creates the file `test.txt` with the default text of `Hello, "world!"`
 
@@ -229,7 +238,7 @@ This example creates the file `test.txt` with the default text of `Hello, "world
 ```
 
 
-### Example Run: file already exists
+#### Example Run: file already exists
 
 Here's what happens if you rerun the previous example. As the file already exists, it returns `changed: false`, which indicates that it's already in the correct state.
 
@@ -250,7 +259,7 @@ Here's what happens if you rerun the previous example. As the file already exist
 ```
 
 
-### Example Run: convert to upper case
+#### Example Run: convert to upper case
 
 Convert the contents of the file to upper case. 
 
@@ -270,7 +279,7 @@ Convert the contents of the file to upper case.
 13  }
 ```
 
-### Example Run: convert to lower case
+#### Example Run: convert to lower case
 
 Convert the contents of the file to lower case.
 
@@ -291,7 +300,7 @@ Convert the contents of the file to lower case.
 ```
 
 
-### Example Run: delete the file
+#### Example Run: delete the file
 
 ```
  1  $ test-module -m bashmod -a 'dest=test.txt state=absent'
@@ -309,7 +318,7 @@ Convert the contents of the file to lower case.
 13  }
 ```
 
-### Example Run: create file and convert to upper case
+#### Example Run: create file and convert to upper case
 
 This example specifies the state as `upper` but the file hadn't been created yet. The module creates the file and converts the contents to upper case. Both actions are reflected in the `msg` variable that's returned. 
 
@@ -329,7 +338,7 @@ This example specifies the state as `upper` but the file hadn't been created yet
 13  }
 ```
 
-## Testing Using Ansible Command Line
+### Testing Using Ansible Command Line
 
 You can use the `ansible` command to run your module. If your module outputs anything other than JSON, it will be treated as a failure. 
 
@@ -342,7 +351,7 @@ You can use the `ansible` command to run your module. If your module outputs any
  6  }
 ```
 
-## Testing Using bash
+### Testing Using bash
 
  You can execute your module directly by writing the arguments to a file in key=value pairs on a single line. Run the module and pass the name of this file. 
  
