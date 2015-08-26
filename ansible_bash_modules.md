@@ -55,7 +55,7 @@ For example:
 echo '{"changed": true, "msg": "Updated stuff"}'
 ```
 
-The JSON variable names and values must be enclosed in double quotes, with the exception for the values `true` and `false` which don't need quotes. 
+The JSON variable names must be enclosed in double quotes. String values must also be enclosed in double quotes, but numbers, booleans (true or false), lists and dictionaries don't need double quotes.  
 
 Because of the double quotes, I've surrounded the whole string in single quotes. This is ok if you're returning fixed strings, but doesn't work if you want to use variables as bash won't do variable expansion in a single quoted string. 
 
