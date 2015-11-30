@@ -164,11 +164,11 @@ This is a simple example module which writes some text to a file and can convert
  75 source $1
  76 
  77 if [ -z "$dest" ]; then
- 78     printf '{"failed": "true", "msg": "missing required arguments: dest"}'
+ 78     printf '{"failed": true, "msg": "missing required arguments: dest"}'
  79     exit 1
  80 fi
  81 if [ -z "$state" ]; then
- 82     printf '{"failed": "true", "msg": "missing required arguments: state"}'
+ 82     printf '{"failed": true, "msg": "missing required arguments: state"}'
  83     exit 1
  84 fi
  85 
@@ -195,7 +195,7 @@ This is a simple example module which writes some text to a file and can convert
 106         ;;
 107 esac
 108 
-109 printf '{"changed": "%s", "msg": "%s", "contents": %s}' "$changed" "$msg" "$contents"
+109 printf '{"changed": %s, "msg": "%s", "contents": %s}' "$changed" "$msg" "$contents"
 110 
 111 exit 0
 ```
@@ -231,7 +231,7 @@ This example creates the file `test.txt` with the default text of `Hello, "world
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "true",
+10      "changed": true,
 11      "contents": "Hello, \"world!\"\n",
 12      "msg": "file created"
 13  } 
@@ -248,11 +248,11 @@ Here's what happens if you rerun the previous example. As the file already exist
  3  * this may offset any line numbers in tracebacks/debuggers!
  4  ***********************************
  5  RAW OUTPUT
- 6  {"changed": "false", "msg": "file already exists", "contents": "Hello, \"world!\"\n"}
+ 6  {"changed": false, "msg": "file already exists", "contents": "Hello, \"world!\"\n"}
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "false",
+10      "changed": false,
 11      "contents": "Hello, \"world!\"\n",
 12      "msg": "file already exists"
 13  }
@@ -269,11 +269,11 @@ Convert the contents of the file to upper case.
  3  * this may offset any line numbers in tracebacks/debuggers!
  4  ***********************************
  5  RAW OUTPUT
- 6  {"changed": "true", "msg": "file converted to uppercase", "contents": "HELLO, \"WORLD!\""}
+ 6  {"changed": true, "msg": "file converted to uppercase", "contents": "HELLO, \"WORLD!\""}
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "true",
+10      "changed": true,
 11      "contents": "HELLO, \"WORLD!\"",
 12      "msg": "file converted to upper case"
 13  }
@@ -289,11 +289,11 @@ Convert the contents of the file to lower case.
  3  * this may offset any line numbers in tracebacks/debuggers!
  4  ***********************************
  5  RAW OUTPUT
- 6  {"changed": "true", "msg": "file converted to uppercase", "contents": "hello, \"world!\""}
+ 6  {"changed": true, "msg": "file converted to uppercase", "contents": "hello, \"world!\""}
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "true",
+10      "changed": true,
 11      "contents": "hello, \"world!\"",
 12      "msg": "file converted to lower case"
 13  }
@@ -308,11 +308,11 @@ Convert the contents of the file to lower case.
  3  * this may offset any line numbers in tracebacks/debuggers!
  4  ***********************************
  5  RAW OUTPUT
- 6  {"changed": "true", "msg": "file deleted", "contents": "hello, \"world!\"\n"}
+ 6  {"changed": true, "msg": "file deleted", "contents": "hello, \"world!\"\n"}
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "true",
+10      "changed": true,
 11      "contents": "hello, \"world!\"\n",
 12      "msg": "file deleted"
 13  }
@@ -328,11 +328,11 @@ This example specifies the state as `upper` but the file hadn't been created yet
  3  * this may offset any line numbers in tracebacks/debuggers!
  4  ***********************************
  5  RAW OUTPUT
- 6  {"changed": "true", "msg": "file created, file converted to uppercase", "contents": "HELLO, \"WORLD!\""}
+ 6  {"changed": true, "msg": "file created, file converted to uppercase", "contents": "HELLO, \"WORLD!\""}
  7  ***********************************
  8  PARSED OUTPUT
  9  {
-10      "changed": "true",
+10      "changed": true,
 11      "contents": "HELLO, \"WORLD!\"",
 12      "msg": "file created, file converted to uppercase"
 13  }
@@ -345,7 +345,7 @@ You can use the `ansible` command to run your module. If your module outputs any
 ```
  1  $ ansible -c local -i 'localhost,'  -M . -m bashmod -a 'dest=test.txt state=present' all
  2  localhost | success >> {
- 3      "changed": "true",
+ 3      "changed": true,
  4      "contents": "Hello, \"world!\"\n",
  5      "msg": "file created"
  6  }
@@ -360,7 +360,7 @@ You can use the `ansible` command to run your module. If your module outputs any
 ```
  1  $ echo 'dest=test.txt state=present' > args
  2  $ bash bashmod args
- 3  {"changed": "false", "msg": "file already exists", "contents": "Hello, \"world!\"\n"}
+ 3  {"changed": false, "msg": "file already exists", "contents": "Hello, \"world!\"\n"}
 ```
 
 You can run your module with the `-x` option to trace its execution. 
@@ -385,6 +385,6 @@ You can run your module with the `-x` option to trace its execution.
 17  ++ cat test.txt
 18  ++ python -c 'import json,sys; print json.dumps(sys.stdin.read())'
 19  + contents='"Hello, \"world!\"\n"'
-20  + printf '{"changed": "%s", "msg": "%s", "contents": %s}' true 'file created' '"Hello, \"world!\"\n"'
-21  {"changed": "true", "msg": "file created", "contents": "Hello, \"world!\"\n"}+ exit 0
+20  + printf '{"changed": %s, "msg": "%s", "contents": %s}' true 'file created' '"Hello, \"world!\"\n"'
+21  {"changed": true, "msg": "file created", "contents": "Hello, \"world!\"\n"}+ exit 0
 ```
