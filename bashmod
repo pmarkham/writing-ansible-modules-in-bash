@@ -44,7 +44,7 @@ function convert_to_upper
         msg="${msg}file not changed"
         contents=$(printf "$current" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
     else
-        echo "$new" > $dest
+
         changed="true"
         msg="${msg}file converted to upper case"
         contents=$(printf "$new" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
@@ -75,11 +75,11 @@ function convert_to_lower
 source $1
 
 if [ -z "$dest" ]; then
-    printf '{"failed": "true", "msg": "missing required arguments: dest"}'
+    printf '{"failed": true, "msg": "missing required arguments: dest"}'
     exit 1
 fi
 if [ -z "$state" ]; then
-    printf '{"failed": "true", "msg": "missing required arguments: state"}'
+    printf '{"failed": true, "msg": "missing required arguments: state"}'
     exit 1
 fi
 
@@ -106,6 +106,6 @@ case $state in
         ;;
 esac
 
-printf '{"changed": "%s", "msg": "%s", "contents": %s}' "$changed" "$msg" "$contents"
+printf '{"changed": %s, "msg": "%s", "contents": %s}' "$changed" "$msg" "$contents"
 
 exit 0
