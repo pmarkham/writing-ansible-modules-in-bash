@@ -211,7 +211,7 @@ If you've install Ansible via a package, you may not have this directory; you'll
 Setting up your environment to use it:
 
 * Change directory into the `ansible/hacking` directory. 
-* Run `source env-setup`. This will update your environment variable to enable Anduble to run out of this directory.
+* Run `source env-setup`. This will update your environment variable to enable Ansible to run out of this directory.
  * Add the current directory to your path so you can run  `test-module` without having to specify its path all the time:
     ```
     export PATH=$PATH:`pwd` 
