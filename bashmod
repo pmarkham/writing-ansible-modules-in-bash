@@ -21,7 +21,7 @@ function delete_file
         contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
         output=$(rm -f $dest 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
         if [ $? -ne 0 ]; then
-            printf '{"failed": "true", "msg": "error deleting file", "output": %s}' "$output"
+            printf '{"failed": true, "msg": "error deleting file", "output": %s}' "$output"
             exit 1
         fi
     else
