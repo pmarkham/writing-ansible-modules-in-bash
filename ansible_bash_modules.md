@@ -110,7 +110,7 @@ This is a simple example module which writes some text to a file and can convert
  21         contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
  22         output=$(rm -f $dest 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
  23         if [ $? -ne 0 ]; then
- 24             printf '{"failed": "true", "msg": "error deleting file", "output": %s}' "$output"
+ 24             printf '{"failed": true, "msg": "error deleting file", "output": %s}' "$output"
  25             exit 1
  26         fi
  27     else
