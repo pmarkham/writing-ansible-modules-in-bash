@@ -73,7 +73,7 @@ printf '{"changed": true, "msg": "%s"}' "$msg"
 Some characters have special meaning to JSON and need to be escaped. If you return any output from a command, you're better off escaping it just in case. There are probably numerous ways to do this, but I like to pipe it through a Python one-liner; if you're using Ansible, you're already going to have Python installed. I don't know who came up with this Python command, so I can't give them attribution; thanks, though!
 
 ```
-$msg = $(echo "$msg" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+$msg = $(echo "$msg" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
 ```
 
 This might be a good thing to put in a function so you can easily use it in multiple places. One thing to be careful of if you're using this method is that the Python `json.dumps` command puts starting and ending double quotes around the string. This means you need to modify the above `printf` command to remove the quotes from around the `%s`, as follows:
@@ -99,7 +99,7 @@ This is a simple example module which writes some text to a file and can convert
  10         changed="true"
  11         msg="file created"
  12     fi   
- 13     contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 13     contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  14     }
  15 
  16 function delete_file
@@ -107,8 +107,8 @@ This is a simple example module which writes some text to a file and can convert
  18     if [ -f "$dest" ]; then
  19         changed="true"
  20         msg="file deleted"
- 21         contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
- 22         output=$(rm -f $dest 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 21         contents=$(cat "$dest" 2>&1 | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
+ 22         output=$(rm -f $dest 2>&1 | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  23         if [ $? -ne 0 ]; then
  24             printf '{"failed": true, "msg": "error deleting file", "output": %s}' "$output"
  25             exit 1
@@ -131,12 +131,12 @@ This is a simple example module which writes some text to a file and can convert
  42     if [ "$current" = "$new" ]; then
  43         changed="false"
  44         msg="${msg}file not changed"
- 45         contents=$(printf "$current" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 45         contents=$(printf "$current" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  46     else
  47         echo "$new" > $dest
  48         changed="true"
  49         msg="${msg}file converted to upper case"
- 50         contents=$(printf "$new" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 50         contents=$(printf "$new" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  51     fi
  52     }
  53 
@@ -146,18 +146,18 @@ This is a simple example module which writes some text to a file and can convert
  57         create_file
  58         msg="$msg, "
  59     fi
- 60     contents=$(ls -l "$dest" 2>&1 | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 60     contents=$(ls -l "$dest" 2>&1 | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  61     current=$(cat $dest)
  62     new=$(echo "$current" | tr '[:upper:]' '[:lower:]')
  63     if [ "$current" = "$new" ]; then
  64         changed="false"
  65         msg="${msg}file not changed"
- 66         contents=$(printf "$current" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 66         contents=$(printf "$current" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  67     else
  68         echo "$new" > $dest
  69         changed="true"
  70         msg="${msg}file converted to lower case"
- 71         contents=$(printf "$new" | python -c 'import json,sys; print json.dumps(sys.stdin.read())')
+ 71         contents=$(printf "$new" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
  72     fi
  73     }
  74 
@@ -383,7 +383,7 @@ You can run your module with the `-x` option to trace its execution.
 15  + changed=true
 16  + msg='file created'
 17  ++ cat test.txt
-18  ++ python -c 'import json,sys; print json.dumps(sys.stdin.read())'
+18  ++ python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
 19  + contents='"Hello, \"world!\"\n"'
 20  + printf '{"changed": %s, "msg": "%s", "contents": %s}' true 'file created' '"Hello, \"world!\"\n"'
 21  {"changed": true, "msg": "file created", "contents": "Hello, \"world!\"\n"}+ exit 0
